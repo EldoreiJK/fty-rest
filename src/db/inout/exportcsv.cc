@@ -33,6 +33,7 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 #include <tntdb/transaction.h>
 
 #include <fty_common.h>
+#include <fty_common_macros.h>
 #include <fty_common_db_dbpath.h>
 #include <fty_common_db_asset.h>
 #include "dbtypes.h"
@@ -138,7 +139,7 @@ void
 {
     // 0.) tntdb connection
     tntdb::Connection conn;
-    std::string msg{"no connection to database"};
+    std::string msg{TRANSLATE_ME ("no connection to database")};
     try{
         conn = tntdb::connectCached(DBConn::url);
     }

@@ -34,7 +34,8 @@
 #include <fty_common_db_dbpath.h>
 #include <fty_common_db_asset.h>
 #include <fty_common_mlm_tntmlm.h>
-#include <fty_common.h>
+#include <fty_common_asset_types.h>
+#include <fty_common_macros.h>
 
 #include "shared/upsstatus.h"
 #include "shared/data.h"
@@ -138,7 +139,7 @@ bool database_ready;
     // verify server is ready
     if (!database_ready) {
         log_debug ("Database is not ready yet.");
-        http_die ("internal-error", "Database is not ready yet, please try again after a while.");
+        http_die ("internal-error", TRANSLATE_ME ("Database is not ready yet, please try again after a while."));
     }
 
     // check user permissions
@@ -193,7 +194,7 @@ std::vector<uint32_t> asset_ids;
     catch (const std::exception &e)
     {
         LOG_END_ABNORMAL(e);
-        http_die("internal-error", "Cannot connect to the database");
+        http_die("internal-error", TRANSLATE_ME ("Cannot connect to the database"));
     }
 
 
@@ -201,7 +202,7 @@ std::vector<uint32_t> asset_ids;
     MlmClientPool::Ptr client = mlm_pool.get ();
     if (!client.getPointer ()) {
         log_fatal ("mlm_pool.get () failed.");
-        http_die ("internal-error", "mlm_pool.get () failed.");
+        http_die ("internal-error", TRANSLATE_ME ("mlm_pool.get () failed."));
     }
 
     // Go through all passed ids
@@ -220,7 +221,7 @@ std::vector<uint32_t> asset_ids;
             continue;
         }
         if ( asset.status == 0 && asset.errsubtype == DB_ERROR_INTERNAL) {
-            http_die ("internal-error", "Database failure");
+            http_die ("internal-error", TRANSLATE_ME ("Database failure"));
         }
 
         std::map <std::string, double> measurements{};
@@ -234,14 +235,14 @@ std::vector<uint32_t> asset_ids;
             log_fatal (
                     "client->sendto (address = '%s', subject = '%s', timeout = 1000) failed.",
                     "fty-metric-cache", "latest-rt-data");
-            http_die ("internal-error", "client->sendto () failed");
+            http_die ("internal-error", TRANSLATE_ME ("client->sendto () failed"));
         }
 
         zmsg_t *msg = client->recv (zuuid_str_canonical (uuid), 5);
         zuuid_destroy (&uuid);
         if (!msg) {
             log_fatal ("client->recv (timeout = '5') returned NULL");
-            http_die ("internal-error", "client->recv () returned NULL");
+            http_die ("internal-error", TRANSLATE_ME ("client->recv () returned NULL"));
         }
 
         char *result = zmsg_popstr (msg);
@@ -312,7 +313,7 @@ std::vector<uint32_t> asset_ids;
 
         std::pair<std::string,std::string> asset_names = DBAssets::id_to_name_ext_name (asset_id);
         if (asset_names.first.empty () && asset_names.second.empty ())
-            http_die ("internal-error", "Database failure");
+            http_die ("internal-error", TRANSLATE_ME ("Database failure"));
 
         // we are here -> everything is ok, need just to form
         // this is a small JSON for just ONE asset

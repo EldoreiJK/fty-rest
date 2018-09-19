@@ -38,7 +38,7 @@
 #include <fty_common_asset_types.h>
 #include <fty_common_mlm.h>
 #include <fty_common_mlm_utils.h>
-
+#include <fty_common_macros.h>
 </%pre>
 <%request scope="global">
 UserInfo user;
@@ -48,7 +48,7 @@ bool database_ready;
     // verify server is ready
     if (!database_ready) {
         log_debug ("Database is not ready yet.");
-        http_die ("internal-error", "Database is not ready yet, please try again after a while.");
+        http_die ("internal-error", TRANSLATE_ME ("Database is not ready yet, please try again after a while."));
     }
 
     // check user permissions
@@ -75,7 +75,7 @@ bool database_ready;
                 id.c_str (), type.c_str ());
 
         if ( !type.empty() && !persist::type_to_typeid (type) )
-            http_die("request-param-bad", "type", type.c_str(), "one of datacenter/room/row/rack/group/device");
+            http_die("request-param-bad", "type", TRANSLATE_ME (type.c_str()), TRANSLATE_ME ("one of datacenter/room/row/rack/group/device"));
 
         checked_type = type;
 
@@ -100,7 +100,7 @@ bool database_ready;
     mlm_client_t *client = mlm_client_new ();
     if (!client) {
         log_fatal ("mlm_client_new() failed.");
-        http_die ("internal-error", "mlm_client_new() failed.");
+        http_die ("internal-error", TRANSLATE_ME ("mlm_client_new() failed."));
     }
 
     std::string client_name = utils::generate_mlm_client_id("web.asset_get");
@@ -111,13 +111,13 @@ bool database_ready;
         log_fatal ("mlm_client_connect (endpoint = '%s', timeout = '%d', address = '%s') failed.",
                         MLM_ENDPOINT, 1000, client_name.c_str ());
         mlm_client_destroy (&client);
-        http_die ("internal-error", "mlm_client_connect() failed.");
+        http_die ("internal-error", TRANSLATE_ME ("mlm_client_connect() failed."));
     }
     // end connect to malamute
     std::string jsonAsset = getJsonAsset(client,checked_id);
     mlm_client_destroy (&client);
     if (jsonAsset.empty())  {
-      http_die ("internal-error", "get json asset failed.");
+        http_die ("internal-error", TRANSLATE_ME ("get json asset failed."));
     }
 
 // Prepare the reply

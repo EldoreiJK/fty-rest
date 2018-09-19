@@ -34,7 +34,7 @@
 #include <fty_common_rest_helpers.h>
 #include <fty_common_db_dbpath.h>
 #include <fty_common_db_asset.h>
-
+#include <fty_common_macros.h>
 #include "shared/utilspp.h"
 #include "src/db/inout.h"
 
@@ -99,7 +99,7 @@ bool database_ready;
     // verify server is ready
     if (!database_ready) {
         log_debug ("Database is not ready yet.");
-        http_die ("internal-error", "Database is not ready yet, please try again after a while.");
+        http_die ("internal-error", TRANSLATE_ME ("Database is not ready yet, please try again after a while."));
     }
 
     // check user permissions
@@ -149,7 +149,7 @@ bool database_ready;
             for( const auto &it : items ) {
                 a_elmnt_stp_id_t sub_type_id = persist::subtype_to_subtypeid(it);
                 if ( sub_type_id == persist::asset_subtype::SUNKNOWN ) {
-                    http_die ("request-param-bad", "sub_type", it.c_str(), "valid sub_type like feed, ups, etc...");
+                    http_die ("request-param-bad", "sub_type", TRANSLATE_ME (it.c_str()), TRANSLATE_ME ("valid sub_type like feed, ups, etc..."));
                 }
                 checked_subtypes.push_back(sub_type_id);
             }
@@ -160,7 +160,7 @@ bool database_ready;
             for( const auto &it : items ) {
                 a_elmnt_stp_id_t type_id = persist::type_to_typeid(it);
                 if ( type_id == persist::asset_type::TUNKNOWN ) {
-                    http_die ("request-param-bad", "type", it.c_str(), "valid type like datacenter, room, etc...");
+                    http_die ("request-param-bad", "type", TRANSLATE_ME (it.c_str()), TRANSLATE_ME ("valid type like datacenter, room, etc..."));
                 }
                 checked_types.push_back(type_id);
             }
@@ -179,7 +179,7 @@ bool database_ready;
     }
     catch (const tntdb::Error& e) {
         log_error ("tntdb::connectCached (url = '%s') failed: %s.", DBConn::url.c_str (), e.what ());
-        http_die ("internal-error", "Connecting to database failed.");
+        http_die ("internal-error", TRANSLATE_ME ("Connecting to database failed."));
     }
     catch (const std::exception& e) {
         log_error ("Exception caught: '%s'.", e.what ());

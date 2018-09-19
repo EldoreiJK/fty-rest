@@ -33,6 +33,7 @@
 #include "src/db/inout.h"
 #include <fty_common_rest_helpers.h>
 #include <fty_common_db_asset.h>
+#include <fty_common_macros.h>
 
 </%pre>
 <%request scope="global">
@@ -43,8 +44,8 @@ bool database_ready;
 {
     // verify server is ready
     if (!database_ready) {
-        log_debug ("Database is not ready yet.");
-        http_die ("internal-error", "Database is not ready yet, please try again after a while.");
+        log_debug (TRANSLATE_ME ("Database is not ready yet."));
+        http_die ("internal-error", TRANSLATE_ME ("Database is not ready yet, please try again after a while."));
     }
 
     // check user permissions
@@ -63,7 +64,7 @@ bool database_ready;
     }
     catch (const std::exception& e) {
         LOG_END_ABNORMAL(e);
-        http_die("bad-request-document", e.what());
+        http_die ("bad-request-document", e.what());
     }
     shared::CsvMap cm;
     try{
@@ -73,22 +74,22 @@ bool database_ready;
     }
     catch (const std::invalid_argument &e) {
         log_error ("%s", e.what());
-        http_die("bad-request-document", e.what());
+        http_die ("bad-request-document", e.what());
     }
     catch (const std::exception& e) {
         LOG_END_ABNORMAL(e);
-        http_die("internal-error", "See logs for more details");
+        http_die ("internal-error", TRANSLATE_ME ("See logs for more details"));
     }
 
     if (cm.cols() == 0 || cm.rows() == 0) {
-        http_die("bad-request-document", "Cannot import empty document.");
+        http_die("bad-request-document", TRANSLATE_ME ("Cannot import empty document."));
     }
     // in underlying functions like update_device
     if (!cm.hasTitle("type")) {
-        http_die("request-param-required", "type");
+        http_die ("request-param-required", TRANSLATE_ME ("type"));
     }
     if (cm.hasTitle("id")) {
-        http_die("bad-request-document", "key 'id' is forbidden to be used");
+        http_die ("bad-request-document", TRANSLATE_ME ("key 'id' is forbidden to be used"));
     }
 
     try {
@@ -109,14 +110,14 @@ bool database_ready;
         }
         catch (const std::runtime_error &e) {
             log_error ("%s", e.what());
-            std::string msg = "Error during configuration sending of asset change notification. Consult system log.";
-            http_die("internal-error", msg.c_str());
+            std::string msg = TRANSLATE_ME ("Error during configuration sending of asset change notification. Consult system log.");
+            http_die ("internal-error", msg.c_str());
         }
         // no unexpected errors was detected
         // process results
         std::pair<std::string,std::string> foo =  DBAssets::id_to_name_ext_name (row.first.id);
         if (foo.first.empty () && foo.second.empty ())
-            http_die ("internal-error", "Database failure");
+            http_die ("internal-error", TRANSLATE_ME ("Database failure"));
 </%cpp>
 {<$$ utils::json::jsonify ("id", foo.first) $>}
 <%cpp>
@@ -127,7 +128,7 @@ bool database_ready;
     }
     catch (const std::exception& e) {
         LOG_END_ABNORMAL(e);
-        http_die("internal-error", "");
+        http_die ("internal-error", TRANSLATE_ME (""));
     }
 }
 </%cpp>

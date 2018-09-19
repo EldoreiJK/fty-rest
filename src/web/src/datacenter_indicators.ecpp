@@ -37,9 +37,11 @@
 #include <fty_common_rest_helpers.h>
 #include <fty_common_db_asset.h>
 #include <fty_common_mlm_utils.h>
-#include <fty_common.h>
-#include "shared/data.h"
 
+#include <fty_common_asset_types.h>
+#include <fty_common_macros.h>
+
+#include "shared/data.h"
 #include "shared/utilspp.h"
 
 #define RT_PROVIDER_PEER "fty-metric-cache"
@@ -224,7 +226,7 @@ bool database_ready;
     // verify server is ready
     if (!database_ready) {
         log_debug ("Database is not ready yet.");
-        http_die ("internal-error", "Database is not ready yet, please try again after a while.");
+        http_die ("internal-error", TRANSLATE_ME ("Database is not ready yet, please try again after a while."));
     }
 
     // Input arguments checks
@@ -276,7 +278,7 @@ bool database_ready;
     // check that DC exists
     auto allDcsShort = asset_mgr.get_items1("datacenter", "");
     if (allDcsShort.status == 0) {
-        http_die ("internal-error", "Error while retrieving information about datacenters.");
+        http_die ("internal-error", TRANSLATE_ME ("Error while retrieving information about datacenters."));
     }
     std::vector<std::string> DCNames;
     std::vector<uint32_t> DCIDs;
@@ -286,7 +288,7 @@ bool database_ready;
             http_die ("element-not-found", item.c_str ());
         }
         if (dbid == -2) {
-                http_die ("internal-error", "Connecting to database failed.");
+            http_die ("internal-error", TRANSLATE_ME ("Connecting to database failed."));
         }
         auto it = allDcsShort.item.find ((uint32_t) dbid);
         if (it == allDcsShort.item.end()) {
@@ -306,7 +308,7 @@ bool database_ready;
     if ( rv != 0 ) {
         log_error ("%s: Cannot connect to malamute", client_name.c_str());
         mlm_client_destroy (&client);
-        http_die ("internal-error", "Cannot connect to malamute");
+        http_die ("internal-error", TRANSLATE_ME ("Cannot connect to malamute"));
     }
 
     // get current data for all DCs
@@ -319,7 +321,7 @@ bool database_ready;
         if ( rv != 0 ) {
             log_error ("Cannot send message to malamute");
             mlm_client_destroy (&client);
-            http_die ("internal-error", "Cannot send message to malamute.");
+            http_die ("internal-error", TRANSLATE_ME ("Cannot send message to malamute."));
         }
 
         // wait for the reply
@@ -327,7 +329,7 @@ bool database_ready;
         if (!poller) {
             log_error ("zpoller_new() failed.");
             mlm_client_destroy (&client);
-            http_die ("internal-error", "zpoller_new() failed.");
+            http_die ("internal-error", TRANSLATE_ME ("zpoller_new() failed."));
         }
         zmsg_t *mreply = NULL;
         while (true) {
@@ -338,7 +340,7 @@ bool database_ready;
                     log_error ("mlm_client_recv() failed.");
                     zpoller_destroy (&poller);
                     mlm_client_destroy (&client);
-                    http_die ("internal-error", "mlm_client_recv() failed.");
+                    http_die ("internal-error", TRANSLATE_ME ("mlm_client_recv() failed."));
                 }
                 // check if we receive the expected message
                 if ( streq (mlm_client_sender (client), RT_PROVIDER_PEER)) {
@@ -354,7 +356,7 @@ bool database_ready;
                 log_error ("zpoller_wait(timeout = 5000) timed out waiting for message.");
                 zpoller_destroy (&poller);
                 mlm_client_destroy (&client);
-                http_die ("internal-error", "Timed out waiting for message.");
+                http_die ("internal-error", TRANSLATE_ME ("Timed out waiting for message."));
             }
         }
         zpoller_destroy (&poller);
@@ -368,7 +370,7 @@ bool database_ready;
             zstr_free (&uuid_new);
             zmsg_destroy (&mreply);
             mlm_client_destroy (&client);
-            http_die ("internal-error", "See log for more detail");
+            http_die ("internal-error", TRANSLATE_ME ("See log for more detail"));
         }
         zstr_free (&status);
         zstr_free (&uuid_new);
@@ -416,7 +418,7 @@ bool database_ready;
     for( size_t D = 0 ; D < DCs.size(); D++ ) {
         std::pair<std::string,std::string> dc_names = DBAssets::id_to_name_ext_name (DCIDs[D]);
         if (dc_names.first.empty () && dc_names.second.empty ())
-            http_die ("internal-error", "Database failure");
+            http_die ("internal-error", TRANSLATE_ME ("Database failure"));
 
         json += "{";
         json += "\"id\": \"";

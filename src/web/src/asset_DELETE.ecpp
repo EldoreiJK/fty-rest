@@ -30,6 +30,7 @@
 #include "shared/configure_inform.h"
 #include <fty_common_rest_helpers.h>
 #include <fty_common_db_asset.h>
+#include <fty_common_macros.h>
 </%pre>
 <%thread scope="global">
 asset_manager     asset_mgr;
@@ -43,7 +44,7 @@ bool database_ready;
     // verify server is ready
     if (!database_ready) {
         log_debug ("Database is not ready yet.");
-        http_die ("internal-error", "Database is not ready yet, please try again after a while.");
+        http_die ("internal-error", TRANSLATE_ME ("Database is not ready yet, please try again after a while."));
     }
 
     // check user permissions
@@ -61,7 +62,7 @@ bool database_ready;
         }
 
         if ( !persist::is_ok_name (id.c_str ()) )
-            http_die ("request-param-bad", "id", id.c_str (), "valid asset name");
+            http_die ("request-param-bad", "id", id.c_str (), TRANSLATE_ME ("valid asset name"));
         checked_id = id;
     }
     // end sanity checks
@@ -72,7 +73,7 @@ bool database_ready;
         http_die ("element-not-found", checked_id.c_str ());
     }
     if (dbid == -2) {
-        http_die ("internal-error", "Database failure");
+        http_die ("internal-error", TRANSLATE_ME ("Database failure"));
     }
 
     // delete it
@@ -83,7 +84,7 @@ bool database_ready;
             http_die("element-not-found", checked_id.c_str ());
         }
         else {
-            http_die("data-conflict",  checked_id.c_str (), "Asset is in use, remove children/power source links first.");
+            http_die("data-conflict",  checked_id.c_str (), TRANSLATE_ME ("Asset is in use, remove children/power source links first."));
         }
     }
     // here we are -> delete was successful
@@ -105,7 +106,7 @@ bool database_ready;
     catch (const std::runtime_error &e) {
         log_error ("%s", e.what());
         std::string msg = "Error during configuration sending of asset change notification. Consult system log.";
-        http_die("internal-error", msg.c_str());
+        http_die("internal-error", TRANSLATE_ME (msg.c_str()));
     }
 }
 </%cpp>

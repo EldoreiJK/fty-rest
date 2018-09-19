@@ -45,7 +45,7 @@ bool database_ready;
     // verify server is ready
     if (!database_ready) {
         log_debug ("Database is not ready yet.");
-        http_die ("internal-error", "Database is not ready yet, please try again after a while.");
+        http_die ("internal-error", TRANSLATE_ME ("Database is not ready yet, please try again after a while."));
     }
 
     // check user permissions
@@ -78,7 +78,7 @@ bool database_ready;
             if (id == "rackcontroller-0"     ||
                 persist::is_container (type)){
                 log_debug ("Element %s cannot be inactivated.", si_id);
-                http_die ("action-forbidden", "Inactivation of this asset");
+                http_die ("action-forbidden", TRANSLATE_ME ("Inactivation of this asset"));
             }
         }
         else {
@@ -105,17 +105,17 @@ bool database_ready;
     }
     catch (const std::exception& e) {
         LOG_END_ABNORMAL(e);
-        http_die("internal-error", "See log for more details");
+        http_die("internal-error", TRANSLATE_ME ("See log for more details"));
     }
 
     // PUT /asset is currently used to update an existing device (only asset_element and ext_attributes)
     //      for EMC4J.
     // empty document
     if (cm.cols() == 0 || cm.rows() == 0) {
-        http_die("bad-request-document", "Cannot import empty document.");
+        http_die("bad-request-document", TRANSLATE_ME ("Cannot import empty document."));
     }
     if (!cm.hasTitle("type")) {
-        http_die("request-param-required", "type");
+        http_die("request-param-required", TRANSLATE_ME ("type"));
     }
 
     // currently we do not need to support updatein these elements
@@ -138,14 +138,14 @@ bool database_ready;
         }
         catch (const std::runtime_error &e) {
             log_error ("%s", e.what());
-            std::string msg = "Error during configuration sending of asset change notification. Consult system log.";
+            std::string msg = TRANSLATE_ME ("Error during configuration sending of asset change notification. Consult system log.");
             http_die("internal-error", msg.c_str());
         }
         // no unexpected errors was detected
         // process results
         std::pair<std::string, std::string> asset_names = DBAssets::id_to_name_ext_name (row.first.id);
         if (asset_names.first.empty () && asset_names.second.empty ())
-            http_die ("internal-error", "Database failure");
+            http_die ("internal-error", TRANSLATE_ME ("Database failure"));
 
 </%cpp>
 {<$$ utils::json::jsonify ("id", asset_names.first) $>}
@@ -158,7 +158,7 @@ bool database_ready;
     }
     catch (const std::exception& e) {
         LOG_END_ABNORMAL(e);
-        http_die("internal-error", "Consult system log");
+        http_die("internal-error", TRANSLATE_ME ("Consult system log"));
     }
 }
 </%cpp>

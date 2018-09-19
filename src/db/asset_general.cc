@@ -268,11 +268,13 @@ db_reply_t
     LOG_START;
     if (DBAssets::extname_to_asset_id(element_name) != -1) {
         db_reply_t ret;
+        char* msg1 = zsys_sprintf (TRANSLATE_ME ("Element '%s' cannot be processed because of conflict. Most likely duplicate entry.", element_name));
         ret.status     = 0;
         ret.errtype    = DB_ERR;
         ret.errsubtype = DB_ERROR_BADINPUT;
         ret.rowid      = 8;
-        ret.msg        = std::string ("Element '").append (element_name).append ("' cannot be processed because of conflict. Most likely duplicate entry.");
+        ret.msg        = std::string (msg1);
+        zstr_free (&msg1);
         return ret;
     }
     setlocale (LC_ALL, ""); // move this to main?
@@ -281,11 +283,13 @@ db_reply_t
 
     if (streq (status, "nonactive")) {
         db_reply_t ret;
+        char *msg2 = zsys_sprintf (TRANSLATE_ME ("Element '%s' cannot be inactivated. Change status to 'active'.", element_name));
         ret.status     = 0;
         ret.errtype    = DB_ERR;
         ret.errsubtype = DB_ERROR_BADINPUT;
         ret.rowid      = 8;
-        ret.msg        = std::string ("Element '").append (element_name).append ("' cannot be inactivated. Change status to 'active'.");
+        ret.msg        = std::string (msg2);
+        zstr_free (&msg2);
         return ret;
     }
 
@@ -378,11 +382,13 @@ db_reply_t
     LOG_START;
     if (DBAssets::extname_to_asset_id(element_name) != -1) {
         db_reply_t ret;
+        char* msg1 = zsys_sprintf (TRANSLATE_ME("Element '%s' cannot be processed because of conflict. Most likely duplicate entry.", element_name));
         ret.status     = 0;
         ret.errtype    = DB_ERR;
         ret.errsubtype = DB_ERROR_BADINPUT;
         ret.rowid      = 8;
-        ret.msg        = std::string ("Element '").append (element_name).append ("' cannot be processed because of conflict. Most likely duplicate entry.");
+        ret.msg        = std::string (msg1);
+        zstr_free (&msg1);
         return ret;
     }
     setlocale (LC_ALL, ""); // move this to main?
