@@ -107,7 +107,7 @@ db_reply <db_web_element_t>
             ret.status        = basic_ret.status;
             ret.errtype       = basic_ret.errtype;
             ret.errsubtype    = basic_ret.errsubtype;
-            ret.msg           = basic_ret.msg;
+            ret.msg           = JSONIFY(basic_ret.msg);
             log_warning ("%s", ret.msg.c_str());
             return ret;
         }
@@ -122,7 +122,7 @@ db_reply <db_web_element_t>
             ret.status        = ext_ret.status;
             ret.errtype       = ext_ret.errtype;
             ret.errsubtype    = ext_ret.errsubtype;
-            ret.msg           = ext_ret.msg;
+            ret.msg           = JSONIFY(ext_ret.msg);
             log_warning ("%s", ret.msg.c_str());
             return ret;
         }
@@ -137,7 +137,7 @@ db_reply <db_web_element_t>
             ret.status        = group_ret.status;
             ret.errtype       = group_ret.errtype;
             ret.errsubtype    = group_ret.errsubtype;
-            ret.msg           = group_ret.msg;
+            ret.msg           = JSONIFY(group_ret.msg);
             log_warning ("%s", ret.msg.c_str());
             return ret;
         }
@@ -152,9 +152,9 @@ db_reply <db_web_element_t>
             if ( powers.status == 0 )
             {
                 ret.status        = powers.status;
-                ret.errtype       = powers.errtype;
-                ret.errsubtype    = powers.errsubtype;
-                ret.msg           = powers.msg;
+                ret.errtype       = ppowers.errtype;
+                ret.errsubtype    = ppowers.errsubtype;
+                ret.msg           = JSONIFY(ppowers.msg);
                 log_warning ("%s", ret.msg.c_str());
                 return ret;
             }
@@ -174,7 +174,7 @@ db_reply <db_web_element_t>
         ret.status        = 0;
         ret.errtype       = DB_ERR;
         ret.errsubtype    = DB_ERROR_INTERNAL;
-        ret.msg           = e.what();
+        ret.msg           = JSONIFY(e.what());
         LOG_END_ABNORMAL(e);
         return ret;
     }

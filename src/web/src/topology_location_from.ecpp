@@ -54,7 +54,7 @@ bool database_ready;
     // verify server is ready
     if (!database_ready) {
         log_debug ("Database is not ready yet.");
-        http_die ("internal-error", "Database is not ready yet, please try again after a while.");
+        http_die ("internal-error", TRANSLATE_ME("Database is not ready yet, please try again after a while."));
     }
 
     // check user permissions
@@ -86,7 +86,7 @@ bool database_ready;
         // Check url validity
         // 1. Exactly one parameter has to be specified: 'from' or 'to'
         if (!from.empty() && !to.empty()) {
-            http_die("parameter-conflict", "Only one parameter can be specified at once: 'from' or 'to'");
+            http_die("parameter-conflict", TRANSLATE_ME("Only one parameter can be specified at once: 'from' or 'to'"));
         }
         // 2. At least one parameter should be specified
         if (from.empty() && to.empty()) {
@@ -115,16 +115,16 @@ bool database_ready;
             checked_filter = persist::asset_type::GROUP;
         } else {
             // Note: datacenter is not a valid filter parameter according to rfc-11 4.1.13
-            http_die("request-param-bad","filter", filter.c_str(), "'rooms'/'rows'/'racks'/'groups'/'devices'");
+            http_die("request-param-bad", "filter", filter.c_str(), "'rooms'/'rows'/'racks'/'groups'/'devices'");
         }
 
         // 5. Check if 'feed_by' is allowed
         if ( !feed_by.empty() ) {
             if ( checked_filter != persist::asset_type::DEVICE ) {
-                http_die("parameter-conflict", "With variable 'feed_by' can be specified only 'filter=devices'");
+                http_die("parameter-conflict", TRANSLATE_ME("With variable 'feed_by' can be specified only 'filter=devices'"));
             }
             if ( from == "none" ) {
-                http_die("parameter-conflict", "With variable 'feed_by' variable 'from' can not be 'none'");
+                http_die("parameter-conflict", TRANSLATE_ME("With variable 'feed_by' variable 'from' can not be 'none'"));
             }
         }
         // 6. if it is not 'from' request, process it as 'to' request in another ecpp file
@@ -157,7 +157,7 @@ bool database_ready;
                 }
             }
             if ( tmp.item.basic.type_id != persist::asset_type::DEVICE ) {
-                http_die("request-param-bad", "feed_by", feed_by.c_str(), "be a device");
+                http_die("request-param-bad", "feed_by", feed_by.c_str(), TRANSLATE_ME("be a device"));
             }
         }
     }

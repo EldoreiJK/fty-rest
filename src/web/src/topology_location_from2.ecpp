@@ -48,7 +48,7 @@ bool database_ready;
     // verify server is ready
     if (!database_ready) {
         log_debug ("Database is not ready yet.");
-        http_die ("internal-error", "Database is not ready yet, please try again after a while.");
+        http_die ("internal-error", TRANSLATE_ME("Database is not ready yet, please try again after a while."));
     }
 
     // Sanity check end
@@ -104,11 +104,11 @@ bool database_ready;
         if (!feed_by.empty ())
         {
             if (filter != "devices")
-                http_die("parameter-conflict", "Variable 'feed_by' can be specified only with 'filter=devices'");
+                http_die("parameter-conflict", TRANSLATE_ME("Variable 'feed_by' can be specified only with 'filter=devices'"));
             if ( from == "none")
-                http_die("parameter-conflict", "With variable 'feed_by' variable 'from' can not be 'none'");
+                http_die("parameter-conflict", TRANSLATE_ME("With variable 'feed_by' variable 'from' can not be 'none'"));
             if (!persist::is_power_device (conn, feed_by))
-                http_die("request-param-bad", "feed_by", feed_by.c_str(), "must be a power device.");
+                http_die("request-param-bad", "feed_by", feed_by.c_str(), TRANSLATE_ME("must be a power device."));
             else
                 checked_feed_by = feed_by;
         }
@@ -126,13 +126,13 @@ bool database_ready;
     {
 		fed_by = persist::topology2_feed_by (conn, checked_feed_by);
         if (fed_by.empty ())
-            http_die("request-param-bad", "feed_by", checked_feed_by.c_str(), "must be a device.");
+            http_die("request-param-bad", "feed_by", checked_feed_by.c_str(), TRANSLATE_ME("must be a device."));
     }
 
 
 	auto result = persist::topology2_from (conn, checked_from);
     if (result.empty () && checked_from != "none")
-        http_die("request-param-bad", "from", checked_from.c_str(), "valid asset name.");
+        http_die("request-param-bad", "from", checked_from.c_str(), TRANSLATE_ME("valid asset name."));
 
     auto groups = persist::topology2_groups (conn, checked_from, checked_recursive);
 
