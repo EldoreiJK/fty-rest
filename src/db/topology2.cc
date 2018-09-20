@@ -28,6 +28,7 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 #include <cxxtools/jsondeserializer.h>
 #include <cxxtools/jsonserializer.h>
 #include <fty_common.h>
+#include <fty_common_macros.h>
 
 #include "db/topology2.h"
 
@@ -43,7 +44,6 @@ with this program; if not, write to the Free Software Foundation, Inc.,
  *
  */
 #define PARENT_LEVEL_COUNT 10
-// TRANSLATED
 
 namespace persist {
 

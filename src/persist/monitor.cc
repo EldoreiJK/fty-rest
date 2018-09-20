@@ -19,8 +19,10 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 #include <tntdb/row.h>
 #include <tntdb/error.h>
 
-#include "monitor.h"
 #include <fty_common.h>
+#include <fty_common_macros.h>
+
+#include "monitor.h"
 
 // all fields called name
 #define MAX_NAME_LENGTH         50
@@ -43,7 +45,7 @@ db_reply_t
         log_info ("end: too long device name");
         ret.errtype    = DB_ERR;
         ret.errsubtype = DB_ERROR_BADINPUT;
-        ret.msg        = "device name length is not in range [1, MAX_NAME_LENGTH]";
+        ret.msg        = TRANSLATE_ME("device name length is not in range [1, MAX_NAME_LENGTH]");
         return ret;
     }
 
@@ -75,14 +77,14 @@ db_reply_t
         ret.errtype    = DB_ERR;
         ret.errsubtype = DB_ERROR_NOTFOUND;
         ret.msg        = e.what();
-        log_info ("end: discovered device was not found with '%s'", e.what());
+        log_info (TRANSLATE_ME("end: discovered device was not found with '%s'", JSONIFY(e.what())));
         return ret;
     }
     catch (const std::exception &e) {
         ret.status     = 0;
         ret.errtype    = DB_ERR;
         ret.errsubtype = DB_ERROR_INTERNAL;
-        ret.msg        = e.what();
+        ret.msg        = JSONIFY(e.what());
         LOG_END_ABNORMAL (e);
         return ret;
     }

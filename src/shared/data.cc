@@ -32,6 +32,7 @@
 #include <fty_common_db_dbpath.h>
 #include <fty_common_rest.h>
 #include <fty_common.h>
+#include <fty_common_macros.h>
 
 #include "shared/data.h"
 
@@ -83,7 +84,7 @@ s_get_parents (tntdb::Connection &conn, a_elmnt_id_t id)
     int r = DBAssets::select_asset_element_super_parent (conn, id, cb);
     if (r == -1) {
         log_error ("select_asset_element_super_parent failed");
-        throw std::runtime_error ("DBAssets::select_asset_element_super_parent () failed.");
+        throw std::runtime_error (TRANSLATE_ME("DBAssets::select_asset_element_super_parent () failed."));
     }
 
     return ret;
@@ -196,7 +197,7 @@ db_reply <std::map <uint32_t, std::string> >
         ret.status        = 0;
         ret.errtype       = DB_ERR;
         ret.errsubtype    = DB_ERROR_INTERNAL;
-        ret.msg           = "Unsupported type of the elemnts";
+        ret.msg           = TRANSLATE_ME("Unsupported type of the elemnts");
         log_error ("%s", ret.msg.c_str());
         // TODO need to have some more precise list of types, so we don't have to change anything here,
         // if something was changed
@@ -210,7 +211,7 @@ db_reply <std::map <uint32_t, std::string> >
             ret.status        = 0;
             ret.errtype       = DB_ERR;
             ret.errsubtype    = DB_ERROR_INTERNAL;
-            ret.msg           = "Unsupported subtype of the elemnts";
+            ret.msg           = TRANSLATE_ME("Unsupported subtype of the elemnts");
             log_error ("%s", ret.msg.c_str());
             // TODO need to have some more precise list of types, so we don't have to change anything here,
             // if something was changed
@@ -239,7 +240,6 @@ db_reply <std::map <uint32_t, std::string> >
     }
 }
 
-
 db_reply_t
     asset_manager::delete_item(
         uint32_t id,
@@ -263,7 +263,7 @@ db_reply_t
             ret.status        = 0;
             ret.errtype       = basic_info.errsubtype;
             ret.errsubtype    = DB_ERROR_NOTFOUND;
-            ret.msg           = "problem with selecting basic info";
+            ret.msg           = TRANSLATE_ME("problem with selecting basic info");
             log_warning ("%s", ret.msg.c_str());
             return ret;
         }
@@ -286,7 +286,7 @@ db_reply_t
             ret.status        = 0;
             ret.errtype       = basic_info.errsubtype;
             ret.errsubtype    = DB_ERROR_DELETEFAIL;
-            ret.msg           = "a logical_asset (sensor) refere it";
+            ret.msg           = TRANSLATE_ME("a logical_asset (sensor) refere it");
             log_warning ("%s", ret.msg.c_str());
             LOG_END;
             return ret;
@@ -316,7 +316,7 @@ db_reply_t
                 ret.status        = 0;
                 ret.errtype       = basic_info.errsubtype;
                 ret.errsubtype    = DB_ERROR_INTERNAL;
-                ret.msg           = "unknown type";
+                ret.msg           = TRANSLATE_ME("unknown type");
                 log_warning ("%s", ret.msg.c_str());
             }
         }

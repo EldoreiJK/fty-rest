@@ -31,6 +31,7 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 #include <tntdb/error.h>
 #include <tntdb/transaction.h>
 #include <fty_common.h>
+#include <fty_common_macros.h>
 
 #include "assetcrud.h"
 #include "monitor.h"
@@ -206,7 +207,7 @@ db_reply < std::map <std::string, int> >
         ret.status        = 0;
         ret.errtype       = DB_ERR;
         ret.errsubtype    = DB_ERROR_INTERNAL;
-        ret.msg           = e.what();
+        ret.msg           = JSONIFY(e.what());
         ret.item.clear();           // in case of error, clean up partial data
         LOG_END_ABNORMAL(e);
         return ret;
@@ -244,7 +245,7 @@ db_reply <db_a_elmnt_t>
         ret.status     = 0;
         ret.errtype    = DB_ERR;
         ret.errsubtype = DB_ERROR_BADINPUT;
-        ret.msg        = "name is not valid";
+        ret.msg        = TRANSLATE_ME("name is not valid");
         log_error ("end: %s", ret.msg.c_str());
         return ret;
     }
@@ -297,7 +298,7 @@ db_reply <db_a_elmnt_t>
         ret.status        = 0;
         ret.errtype       = DB_ERR;
         ret.errsubtype    = DB_ERROR_NOTFOUND;
-        ret.msg           = "element with specified name was not found";
+        ret.msg           = TRANSLATE_ME("element with specified name was not found");
         LOG_END;
         return ret;
     }
@@ -305,7 +306,7 @@ db_reply <db_a_elmnt_t>
         ret.status        = 0;
         ret.errtype       = DB_ERR;
         ret.errsubtype    = DB_ERROR_INTERNAL;
-        ret.msg           = e.what();
+        ret.msg           = JSONIFY(e.what());
         LOG_END_ABNORMAL(e);
         return ret;
     }
@@ -360,7 +361,7 @@ db_reply <std::vector<db_a_elmnt_t>>
         ret.status        = 0;
         ret.errtype       = DB_ERR;
         ret.errsubtype    = DB_ERROR_INTERNAL;
-        ret.msg           = e.what();
+        ret.msg           = JSONIFY(e.what());
         ret.item.clear();
         LOG_END_ABNORMAL(e);
         return ret;
@@ -438,7 +439,7 @@ db_reply <std::set <std::pair<a_elmnt_id_t ,a_elmnt_id_t>>>
         ret.status     = 0;
         ret.errtype    = DB_ERR;
         ret.errsubtype = DB_ERROR_INTERNAL;
-        ret.msg        = e.what();
+        ret.msg        = JSONIFY(e.what());
         LOG_END_ABNORMAL(e);
         return ret;
     }

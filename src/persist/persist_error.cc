@@ -1,6 +1,6 @@
 /*
 Copyright (C) 2014 Eaton
- 
+
 This program is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
 the Free Software Foundation; either version 2 of the License, or
@@ -17,6 +17,7 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 */
 
 #include "persist_error.h"
+#include <fty_common_macros.h>
 
 namespace bios
 {
@@ -24,30 +25,30 @@ namespace bios
     : std::runtime_error(msg)
     {
     }
-    
+
     NotFound::NotFound()
-    : BiosErrorBase("Specified element was not found")
-    { 
+    : BiosErrorBase(TRANSLATE_ME("Specified element was not found"))
+    {
     }
-    
+
     InternalDBError::InternalDBError(const std::string& msg)
     : BiosErrorBase(msg)
-    { 
+    {
     }
 
     ElementIsNotDevice::ElementIsNotDevice()
-    : BiosErrorBase("Specified element is not a device")
-    { 
+    : BiosErrorBase(TRANSLATE_ME("Specified element is not a device"))
+    {
     }
 
     MonitorCounterpartNotFound::MonitorCounterpartNotFound()
-    :BiosErrorBase("For specified device monitor counterpart was not found")
+    :BiosErrorBase(TRANSLATE_ME("For specified device monitor counterpart was not found"))
     {
     }
-    
+
     BadInput::BadInput(const std::string& msg)
     : BiosErrorBase(msg)
-    { 
+    {
     }
 
 }

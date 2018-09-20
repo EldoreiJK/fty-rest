@@ -21,10 +21,11 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 
 #include <fty_common.h>
 #include <fty_common_db.h>
+#include <fty_common_macros.h>
+
 #include "dbtypes.h"
 #include "shared/ic.h"
 #include "shared/utilspp.h"
-
 
 namespace persist {
 
@@ -54,7 +55,9 @@ int
     int affected_rows = 0;
 
     if (streq (status, "nonactive")) {
-        errmsg = element_name + std::string (": Element cannot be inactivated. Change status to 'active'.");
+        char *msg = zsys_sprintf(TRANSLATE_ME("%s: Element cannot be inactivated. Change status to 'active'.", element_name));
+        errmsg = std::string (msg);
+        zsys_free(&msg);
         log_error ("%s", errmsg.c_str ());
         return 1;
     }
@@ -67,7 +70,7 @@ int
     if ( ( ret1 != 0 ) && ( affected_rows != 1 ) )
     {
         trans.rollback();
-        errmsg = "check  element name, location, status, priority, asset_tag";
+        errmsg = TRANSLATE_ME("check  element name, location, status, priority, asset_tag");
         log_error ("end: %s", errmsg.c_str());
         return 1;
     }
@@ -77,7 +80,7 @@ int
     if ( ret2.status == 0 )
     {
         trans.rollback();
-        errmsg = "cannot erase old external attributes";
+        errmsg = TRANSLATE_ME("cannot erase old external attributes");
         log_error ("end: %s", errmsg.c_str());
         return 2;
     }
@@ -87,6 +90,7 @@ int
     if ( ret3.status == 0 )
     {
         trans.rollback();
+        errmsg = JSONIFY(errmsg);
         log_error ("end: %s", errmsg.c_str());
         return 3;
     }
@@ -97,6 +101,7 @@ int
         if ( ret31.status == 0 )
         {
             trans.rollback();
+            errmsg = JSONIFY(errmsg);
             log_error ("end: %s", errmsg.c_str());
             return 31;
         }
@@ -107,7 +112,7 @@ int
     if ( ret4.status == 0 )
     {
         trans.rollback();
-        errmsg = "cannot remove element from old groups";
+        errmsg = TRANSLATE_ME("cannot remove element from old groups");
         log_error ("end: %s", errmsg.c_str());
         return 4;
     }
@@ -117,7 +122,7 @@ int
     if ( ( ret5.status == 0 ) && ( ret5.affected_rows != groups.size() ) )
     {
         trans.rollback();
-        errmsg = "cannot insert device into all specified groups";
+        errmsg = TRANSLATE_ME("cannot insert device into all specified groups");
         log_error ("end: %s", errmsg.c_str());
         return 5;
     }
@@ -153,7 +158,9 @@ int
 
     // dbid for RC_0 is 1: element_id == 1
     if (element_id == 1 && streq (status, "nonactive")) {
-        errmsg = element_name + std::string (": Default rack controller cannot be inactivated. Change status to 'active'.");
+        char *msg = zsys_sprintf(TRANSLATE_ME("%s: Default rack controller cannot be inactivated. Change status to 'active'.", element_name));
+        errmsg = std::string (msg);
+        zsys_free(&msg);
         log_error ("%s", errmsg.c_str ());
         return 1;
     }
@@ -165,7 +172,7 @@ int
     if ( ( ret1 != 0 ) && ( affected_rows != 1 ) )
     {
         trans.rollback();
-        errmsg = "check  element name, location, status, priority, asset_tag";
+        errmsg = TRANSLATE_ME("check  element name, location, status, priority, asset_tag");
         log_error ("end: %s", errmsg.c_str());
         return 1;
     }
@@ -175,7 +182,7 @@ int
     if ( ret2.status == 0 )
     {
         trans.rollback();
-        errmsg = "cannot erase old external attributes";
+        errmsg = TRANSLATE_ME("cannot erase old external attributes");
         log_error ("end: %s", errmsg.c_str());
         return 2;
     }
@@ -185,6 +192,7 @@ int
     if ( ret3.status == 0 )
     {
         trans.rollback();
+        errmsg = JSONIFY(errmsg);
         log_error ("end: %s", errmsg.c_str());
         return 3;
     }
@@ -195,6 +203,7 @@ int
         if ( ret31.status == 0 )
         {
             trans.rollback();
+            errmsg = JSONIFY(errmsg);
             log_error ("end: %s", errmsg.c_str());
             return 31;
         }
@@ -205,7 +214,7 @@ int
     if ( ret4.status == 0 )
     {
         trans.rollback();
-        errmsg = "cannot remove element from old groups";
+        errmsg = TRANSLATE_ME("cannot remove element from old groups");
         log_error ("end: %s", errmsg.c_str());
         return 4;
     }
@@ -215,7 +224,7 @@ int
     if ( ret5.affected_rows != groups.size() )
     {
         trans.rollback();
-        errmsg = "cannot insert device into all specified groups";
+        errmsg = TRANSLATE_ME("cannot insert device into all specified groups");
         log_error ("end: %s", errmsg.c_str());
         return 5;
     }
@@ -230,7 +239,7 @@ int
     if ( ret6.status == 0 )
     {
         trans.rollback();
-        errmsg = "cannot remove old power sources";
+        errmsg = TRANSLATE_ME("cannot remove old power sources");
         log_error ("end: %s", errmsg.c_str());
         return 6;
     }
@@ -240,7 +249,7 @@ int
     if ( ret7.affected_rows != links.size() )
     {
         trans.rollback();
-        errmsg = "cannot add new power sources";
+        errmsg = TRANSLATE_ME("cannot add new power sources");
         log_error ("end: %s", errmsg.c_str());
         return 7;
     }
@@ -301,6 +310,7 @@ db_reply_t
     {
         trans.rollback();
         log_error ("end: element was not inserted");
+        reply_insert1.msg = JSONIFY(reply_insert1.msg);
         return reply_insert1;
     }
     auto element_id = reply_insert1.rowid;
@@ -313,6 +323,7 @@ db_reply_t
     {
         trans.rollback();
         log_error ("end: device was not inserted (fail in ext_attributes)");
+        reply_insert2.msg = JSONIFY(reply_insert2.msg);
         return reply_insert2;
     }
 
@@ -325,6 +336,7 @@ db_reply_t
         {
             trans.rollback();
             log_error ("end: device was not inserted (fail in ext_attributes)");
+            reply_insert21.msg = JSONIFY(reply_insert21.msg);
             return reply_insert21;
         }
     }
@@ -334,6 +346,7 @@ db_reply_t
     {
         trans.rollback();
         log_info ("end: device was not inserted (fail into groups)");
+        reply_insert3.msg = JSONIFY(reply_insert3.msg);
         return reply_insert3;
     }
 
@@ -346,6 +359,7 @@ db_reply_t
         {
             trans.rollback();
             log_info ("end: \"device\" was not inserted (fail monitor_device)");
+            reply_insert4.msg = JSONIFY(reply_insert4.msg);
             return reply_insert4;
         }
         auto reply_insert5 = DBAssetsInsert::insert_into_monitor_asset_relation
@@ -354,12 +368,14 @@ db_reply_t
         {
             trans.rollback();
             log_info ("end: monitor asset link was not inserted (fail monitor asset relation)");
+            reply_insert5.msg = JSONIFY(reply_insert5.msg);
             return reply_insert5;
         }
     }
 
     trans.commit();
     LOG_END;
+    reply_insert1.msg = JSONIFY(reply_insert1.msg);
     return reply_insert1;
 }
 
@@ -404,6 +420,7 @@ db_reply_t
     {
         trans.rollback();
         log_info ("end: device was not inserted (fail in element)");
+        reply_insert1.msg = JSONIFY(reply_insert1.msg);
         return reply_insert1;
     }
     auto element_id = reply_insert1.rowid;
@@ -415,6 +432,7 @@ db_reply_t
     {
         trans.rollback();
         log_error ("end: device was not inserted (fail in ext_attributes)");
+        reply_insert2.msg = JSONIFY(reply_insert2.msg);
         return reply_insert2;
     }
 
@@ -426,6 +444,7 @@ db_reply_t
         {
             trans.rollback();
             log_error ("end: device was not inserted (fail in ext_attributes)");
+            reply_insert21.msg = JSONIFY(reply_insert21.msg);
             return reply_insert21;
         }
     }
@@ -435,6 +454,7 @@ db_reply_t
     {
         trans.rollback();
         log_info ("end: device was not inserted (fail into groups)");
+        reply_insert3.msg = JSONIFY(reply_insert3.msg);
         return reply_insert3;
     }
 
@@ -450,6 +470,7 @@ db_reply_t
     {
         trans.rollback();
         log_info ("end: not all links were inserted (fail asset_link)");
+        reply_insert5.msg = JSONIFY(reply_insert5.msg);
         return reply_insert5;
     }
 
@@ -463,6 +484,7 @@ db_reply_t
         {
             trans.rollback();
             log_info ("end: device was not inserted (fail monitor_device)");
+            reply_insert6.msg = JSONIFY(reply_insert6.msg);
             return reply_insert6;
         }
 
@@ -472,6 +494,7 @@ db_reply_t
         {
             trans.rollback();
             log_info ("end: monitor asset link was not inserted (fail monitor asset relation)");
+            reply_insert7.msg = JSONIFY(reply_insert7.msg);
             return reply_insert7;
         }
     }
@@ -483,11 +506,13 @@ db_reply_t
     {
         trans.rollback();
         log_warning ("end: some error in denoting a type of device in monitor part");
+        reply_select.msg = JSONIFY(reply_select.msg);
         return reply_select;
 
     }
     trans.commit();
     LOG_END;
+    reply_insert1.msg = JSONIFY(reply_insert1.msg);
     return reply_insert1;
 }
 //=============================================================================
@@ -515,7 +540,7 @@ db_reply_t
             ret.status     = 0;
             ret.errtype    = DB_ERR;
             ret.errsubtype = DB_ERROR_DELETEFAIL;
-            ret.msg        = "will not allow last datacenter to be deleted";
+            ret.msg        = TRANSLATE_ME("will not allow last datacenter to be deleted");
             return ret;
         }
     }
@@ -526,6 +551,7 @@ db_reply_t
     {
         trans.rollback();
         log_info ("end: error occured during removing from groups");
+        reply_delete2.msg = JSONIFY(reply_delete2.msg);
         return reply_delete2;
     }
 
@@ -550,6 +576,7 @@ db_reply_t
     {
         trans.rollback();
         log_info ("end: error occured during removing ma relation");
+        reply_delete3.msg = JSONIFY(reply_delete3.msg);
         return reply_delete3;
     }
 
@@ -558,11 +585,13 @@ db_reply_t
     {
         trans.rollback();
         log_info ("end: error occured during removing element");
+        reply_delete4.msg = JSONIFY(reply_delete4.msg);
         return reply_delete4;
     }
 
     trans.commit();
     LOG_END;
+    reply_delete4.msg = JSONIFY(reply_delete4.msg);
     return reply_delete4;
 }
 
@@ -580,6 +609,7 @@ db_reply_t
     {
         trans.rollback();
         log_info ("end: error occured during removing from groups");
+        reply_delete2.msg = JSONIFY(reply_delete2.msg);
         return reply_delete2;
     }
 
@@ -588,11 +618,13 @@ db_reply_t
     {
         trans.rollback();
         log_info ("end: error occured during removing element");
+        reply_delete3.msg = JSONIFY(reply_delete3.msg);
         return reply_delete3;
     }
 
     trans.commit();
     LOG_END;
+    reply_delete3.msg = JSONIFY(reply_delete3.msg);
     return reply_delete3;
 }
 
@@ -610,6 +642,7 @@ db_reply_t
     {
         trans.rollback();
         log_info ("end: error occured during removing from groups");
+        reply_delete2.msg = JSONIFY(reply_delete2.msg);
         return reply_delete2;
     }
 
@@ -618,6 +651,7 @@ db_reply_t
     {
         trans.rollback();
         log_info ("end: error occured during removing links");
+        reply_delete3.msg = JSONIFY(reply_delete3.msg);
         return reply_delete3;
     }
 
@@ -627,6 +661,7 @@ db_reply_t
     {
         trans.rollback();
         log_info ("end: error occured during removing ma relation");
+        reply_delete5.msg = JSONIFY(reply_delete5.msg);
         return reply_delete5;
     }
 
@@ -635,11 +670,13 @@ db_reply_t
     {
         trans.rollback();
         log_info ("end: error occured during removing element");
+        reply_delete6.msg = JSONIFY(reply_delete6.msg);
         return reply_delete6;
     }
 
     trans.commit();
     LOG_END;
+    reply_delete6.msg = JSONIFY(reply_delete6.msg);
     return reply_delete6;
 }
 

@@ -30,9 +30,10 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 
 #include <fty_common.h>
 #include <fty_common_db.h>
+#include <fty_common_macros.h>
+
 #include "assetcrud.h"
 #include "msg/common_msg.h"
-
 #include "assettopology.h"
 #include "persist_error.h"
 #include "cleanup.h"
@@ -47,7 +48,6 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 
 // return first input power group (i.e. group with extended attribute type == input_power)
 // >0 group id, 0 does not exist,  -1 error
-// TRANSLATED
 static int
 get_input_power_group_id
     (const std::string& url,
@@ -95,7 +95,6 @@ get_input_power_group_id
 }
 
 // 0 ok, -1 error
-// TRANSLATED
 static int
 get_power_topology_group
     (const std::string& url,
@@ -167,7 +166,6 @@ get_power_topology_group
     return 0;
 }
 
-// TRANSLATED
 static int
 construct_input_power_group
     (const std::string& url,
@@ -248,7 +246,6 @@ construct_input_power_group
 }
 
 // 0 ok, -1 error
-// TRANSLATED
 int
 input_power_group_response
     (const std::string& url,
@@ -281,7 +278,6 @@ input_power_group_response
 
 // too complex to add new parametr it to the message
 // and messages are going to be deleted, so add it as normal parameter.
-// TRANSLATED
 zmsg_t *process_assettopology (const char *database_url,
                         asset_msg_t **message_p, a_elmnt_id_t feed_by_id) {
 
@@ -397,7 +393,6 @@ zmsg_t *process_assettopology (const char *database_url,
     return return_msg;
 }
 
-// TRANSLATED
 int matryoshka2frame (zmsg_t **matryoshka, zframe_t **frame )
 {
     assert ( matryoshka );
@@ -440,7 +435,6 @@ int matryoshka2frame (zmsg_t **matryoshka, zframe_t **frame )
     }
 }
 
-// TRANSLATED
 size_t my_size(zframe_t* frame)
 {
     if ( frame == NULL )
@@ -449,7 +443,6 @@ size_t my_size(zframe_t* frame)
         return zframe_size (frame);
 }
 
-// TRANSLATED
 zmsg_t* select_group_elements(
             const char*     url             , a_elmnt_id_t    element_id,
             a_elmnt_tp_id_t element_type_id , const char*     group_name,
@@ -591,7 +584,6 @@ zmsg_t* select_group_elements(
     }
 }
 
-// TRANSLATED
 zframe_t* select_childs(
     const char*     url             , a_elmnt_id_t element_id,
     a_elmnt_tp_id_t element_type_id , a_elmnt_tp_id_t child_type_id,
@@ -883,7 +875,6 @@ zframe_t* select_childs(
     }
 }
 
-// TRANSLATED
 zmsg_t* get_return_topology_from(const char* url, asset_msg_t* getmsg, a_elmnt_id_t feed_by_id)
 {
     assert ( getmsg );
@@ -1142,7 +1133,6 @@ zmsg_t* get_return_topology_from(const char* url, asset_msg_t* getmsg, a_elmnt_i
     return el;
 }
 
-// TRANSLATED
 bool compare_start_element (asset_msg_t* rmsg, uint32_t id, uint8_t id_type,
                             const char* name, const char* dtype_name)
 {
@@ -1159,7 +1149,6 @@ bool compare_start_element (asset_msg_t* rmsg, uint32_t id, uint8_t id_type,
         return false;
 }
 
-// TRANSLATED
 edge_lf print_frame_to_edges (zframe_t* frame, a_elmnt_id_t parent_id,
                 a_elmnt_tp_id_t type, std::string name, std::string dtype_name)
 {
@@ -1239,7 +1228,6 @@ edge_lf print_frame_to_edges (zframe_t* frame, a_elmnt_id_t parent_id,
    return result;
 }
 
-// TRANSLATED
 void print_frame (zframe_t* frame, a_elmnt_id_t parent_id)
 {
     byte* buffer = zframe_data (frame);
@@ -1278,7 +1266,6 @@ void print_frame (zframe_t* frame, a_elmnt_id_t parent_id)
    zmsg_destroy (&zmsg);
 }
 
-// TRANSLATED
 zmsg_t* select_parents (const char* url, a_elmnt_id_t element_id,
                         a_elmnt_tp_id_t element_type_id)
 {
@@ -1380,7 +1367,6 @@ zmsg_t* select_parents (const char* url, a_elmnt_id_t element_id,
     }
 }
 
-// TRANSLATED
 zmsg_t* get_return_topology_to(const char* url, asset_msg_t* getmsg)
 {
     assert ( getmsg );
@@ -1427,7 +1413,6 @@ zmsg_t* get_return_topology_to(const char* url, asset_msg_t* getmsg)
     return result;
 }
 
-// TRANSLATED
 std::tuple <std::string, std::string, a_elmnt_tp_id_t>
     select_add_device_info  ( const char* url,
                               a_elmnt_id_t asset_element_id)
@@ -1465,7 +1450,6 @@ std::tuple <std::string, std::string, a_elmnt_tp_id_t>
     return std::make_tuple (element_name, device_type_name, device_type_id);
 }
 
-// TRANSLATED
 zmsg_t* convert_powerchain_devices2matryoshka (
                     std::set < device_info_t > const &devices)
 {
@@ -1484,7 +1468,6 @@ zmsg_t* convert_powerchain_devices2matryoshka (
     return ret;
 }
 
-// TRANSLATED
 zlist_t* convert_powerchain_powerlink2list (
                 std::set < powerlink_info_t > const &powerlinks)
 {
@@ -1502,7 +1485,6 @@ zlist_t* convert_powerchain_powerlink2list (
     return powers;
 }
 
-// TRANSLATED
 zmsg_t* generate_return_power (std::set < device_info_t >    const &devices,
                                std::set < powerlink_info_t > const &powerlinks)
 {
@@ -1519,7 +1501,6 @@ zmsg_t* generate_return_power (std::set < device_info_t >    const &devices,
     return result;
 }
 
-// TRANSLATED
 zmsg_t* get_return_power_topology_from(const char* url, asset_msg_t* getmsg)
 {
     assert ( getmsg );
@@ -1657,7 +1638,6 @@ zmsg_t* get_return_power_topology_from(const char* url, asset_msg_t* getmsg)
     return result;
 }
 
-// TRANSLATED
 void print_frame_devices (zframe_t* frame)
 {
     byte* buffer = zframe_data (frame);
@@ -1682,7 +1662,6 @@ void print_frame_devices (zframe_t* frame)
    zmsg_destroy (&zmsg);
 }
 
-// TRANSLATED
 std::pair < std::set < device_info_t >, std::set < powerlink_info_t > >
 select_power_topology_to (const char* url, a_elmnt_id_t element_id,
                           a_lnk_tp_id_t linktype, bool is_recursive)
@@ -1838,7 +1817,6 @@ select_power_topology_to (const char* url, a_elmnt_id_t element_id,
     return std::make_pair (resultdevices, resultpowers);
 }
 
-// TRANSLATED
 zmsg_t* get_return_power_topology_to (const char* url, asset_msg_t* getmsg)
 {
     assert ( getmsg );
@@ -1885,7 +1863,6 @@ zmsg_t* get_return_power_topology_to (const char* url, asset_msg_t* getmsg)
     return result;
 }
 
-// TRANSLATED
 zmsg_t* get_return_power_topology_group(const char* url, asset_msg_t* getmsg)
 {
     assert ( getmsg );
@@ -2042,7 +2019,6 @@ zmsg_t* get_return_power_topology_group(const char* url, asset_msg_t* getmsg)
     return result;
 }
 
-// TRANSLATED
 zmsg_t* get_return_power_topology_datacenter(const char* url,
                                     asset_msg_t* getmsg)
 {
