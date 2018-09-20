@@ -33,6 +33,7 @@
 #include <fty_common_db_dbpath.h>
 #include <fty_common_db_asset.h>
 #include <fty_common.h>
+#include <fty_common_macros.h>
 
 #include "shared/data.h"
 #include "web/src/location_helpers.h"
@@ -49,7 +50,7 @@ bool database_ready;
     // verify server is ready
     if (!database_ready) {
         log_debug ("Database is not ready yet.");
-        http_die ("internal-error", "Database is not ready yet, please try again after a while.");
+        http_die ("internal-error", TRANSLATE_ME("Database is not ready yet, please try again after a while."));
     }
 
     // check user permissions
@@ -78,15 +79,15 @@ bool database_ready;
 
         // 1. 'recursive' cannot be specified with 'to'
         if ( !recursive.empty() ) {
-            http_die("parameter-conflict", "Parameter 'recursive' can not be specified with parameter 'to'.");
+            http_die("parameter-conflict", TRANSLATE_ME("Parameter 'recursive' can not be specified with parameter 'to'."));
         }
         // 2. 'filter' cannot be specified with 'to'
         if ( !filter.empty() ) {
-            http_die("parameter-conflict", "Parameter 'filter' can not be specified with parameter 'to'.");
+            http_die("parameter-conflict", TRANSLATE_ME("Parameter 'filter' can not be specified with parameter 'to'."));
         }
         // 3. 'feed_by' cannot be specified with 'to'
         if ( !feed_by.empty() ) {
-            http_die("parameter-conflict", "Parameter 'feed_by' can not be specified with parameter 'to'.");
+            http_die("parameter-conflict", TRANSLATE_ME("Parameter 'feed_by' can not be specified with parameter 'to'."));
         }
 
         if (!persist::is_ok_name (to.c_str ())) {
@@ -97,10 +98,10 @@ bool database_ready;
     // Sanity check end
     int64_t checked_to_num = DBAssets::name_to_asset_id (checked_to);
     if (checked_to_num == -1) {
-            http_die ("request-param-bad", "to", checked_to.c_str (), "existing asset name");
+            http_die ("request-param-bad", "to", checked_to.c_str (), TRANSLATE_ME("existing asset name"));
     }
     if (checked_to_num == -2) {
-            http_die ("internal-error", "Connecting to database failed.");
+            http_die ("internal-error", TRANSLATE_ME("Connecting to database failed."));
     }
     // ##################################################
     // BLOCK 2
@@ -241,7 +242,7 @@ bool database_ready;
                 stack.pop();
                 std::pair <std::string,std::string> asset_names = DBAssets::id_to_name_ext_name (std::get<0>(row));
                 if (asset_names.first.empty () && asset_names.second.empty ())
-                    http_die ("internal-error", "Database failure");
+                    http_die ("internal-error", TRANSLATE_ME("Database failure"));
                 ext_name = asset_names.second;
 
                 indent++;
