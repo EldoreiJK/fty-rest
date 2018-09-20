@@ -35,6 +35,7 @@
 #include <fty_common_rest_helpers.h>
 #include <fty_common_db_dbpath.h>
 #include <fty_common.h>
+#include <fty_common_macros.h>
 
 #include "shared/data.h"
 #include "msg/common_msg.h"
