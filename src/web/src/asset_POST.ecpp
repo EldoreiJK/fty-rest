@@ -64,7 +64,7 @@ bool database_ready;
         auto item_pos1 = request.getBody ().find ("\"name\"");
         auto item_pos2 = request.getBody ().find_first_of ('"', item_pos1 + strlen ("\"name\"") + 1);
         auto item_pos3 = request.getBody ().find_first_of ('"', item_pos2 + 2);
-        item = request.getBody ().substr (item_pos2, item_pos3 - item_pos2 - 1);
+        item = request.getBody ().substr (item_pos2 + 1, item_pos3 - item_pos2 - 1);
     }
     catch (const std::exception& e) {
         LOG_END_ABNORMAL (e);

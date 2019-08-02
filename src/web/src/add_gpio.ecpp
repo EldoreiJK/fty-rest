@@ -161,7 +161,7 @@ UserInfo user;
     auto item_pos1 = json.find ("\"part_number\"");
     auto item_pos2 = json.find_first_of ('"', item_pos1 + strlen ("\"part_number\"") + 1);
     auto item_pos3 = json.find_first_of ('"', item_pos2 + 2);
-    std::string item = json.substr (item_pos2, item_pos3 - item_pos2 - 1);
+    std::string item = json.substr (item_pos2 + 1, item_pos3 - item_pos2 - 1);
 
     if (json.empty ()) {
         std::string err =  TRANSLATE_ME ("<JSON object with keys part_number, manufacturer, type, normal_state, gpx_direction, gpx_power_source, alarm_message, alarm_severity>");
